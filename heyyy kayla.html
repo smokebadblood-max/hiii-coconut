@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secret Adventure ❤️</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#ff9ecf,#ffd6eb);
+    min-height:100vh;
+    overflow:hidden;
+}
+
+.screen{
+    display:none;
+    text-align:center;
+    padding:30px;
+}
+
+.active{
+    display:block;
+}
+
+.card{
+    background:white;
+    max-width:700px;
+    margin:30px auto;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+button{
+    border:none;
+    background:#ff4f9a;
+    color:white;
+    padding:12px 22px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:16px;
+    margin:8px;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+#heartGame{
+    position:relative;
+    height:400px;
+    border:2px dashed #ff4f9a;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.heart{
+    position:absolute;
+    font-size:32px;
+    cursor:pointer;
+}
+
+.box{
+    font-size:80px;
+    cursor:pointer;
+    margin:15px;
+    display:inline-block;
+}
+
+#sadness{
+    position:absolute;
+    padding:15px;
+}
+
+#bigHeart{
+    font-size:100px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.popup{
+    margin-top:20px;
+    font-weight:bold;
+    color:#d63384;
+}
+</style>
+</head>
+<body>
+
+<div id="welcome" class="screen active">
+    <div class="card">
+        <h1>❤️ Secret Adventure ❤️</h1>
+        <p>You have been selected for a very important mission.</p>
+        <button onclick="showScreen('quest1')">Start Adventure</button>
+    </div>
+</div>
+
+<div id="quest1" class="screen">
+    <div class="card">
+        <h2>🚨 Smile Emergency</h2>
+        <p>The Smile Detector says your smile level is low.</p>
+        <button onclick="smileQuest()">Generate Smile</button>
+        <div id="smileMsg" class="popup"></div>
+    </div>
+</div>
+
+<div id="quest2" class="screen">
+    <div class="card">
+        <h2>❤️ Catch The Hearts</h2>
+        <p>Tap as many hearts as possible in 15 seconds!</p>
+        <h3>Score: <span id="score">0</span></h3>
+        <div id="heartGame"></div>
+        <button onclick="startHeartGame()">Start Game</button>
+    </div>
+</div>
+
+<div id="quest3" class="screen">
+    <div class="card">
+        <h2>🎁 Mystery Box</h2>
+
+        <span class="box" onclick="openBox()">🎁</span>
+        <span class="box" onclick="openBox()">🎁</span>
+        <span class="box" onclick="openBox()">🎁</span>
+
+        <div id="boxResult" class="popup"></div>
+    </div>
+</div>
+
+<div id="quest4" class="screen">
+    <div class="card">
+        <h2>🧠 Memory Challenge</h2>
+        <p>What's your favourite memory with me?</p>
+
+        <input id="memoryInput"
+        style="padding:10px;width:80%;">
+
+        <br><br>
+
+        <button onclick="memoryQuest()">Submit</button>
+
+        <div id="memoryMsg" class="popup"></div>
+    </div>
+</div>
+
+<div id="quest5" class="screen">
+    <div class="card">
+        <h2>👾 Defeat Sadness</h2>
+        <p>Click Sadness 5 times!</p>
+
+        <div style="height:300px;position:relative;">
+            <button id="sadness">Sadness</button>
+        </div>
+
+        <div id="sadnessMsg" class="popup"></div>
+    </div>
+</div>
+
+<div id="final" class="screen">
+    <div class="card">
+        <h2>💖 Final Love Meter 💖</h2>
+        <p>Tap the heart until it fills up!</p>
+
+        <div id="bigHeart">❤️</div>
+
+        <h3 id="loveCount">0 / 50</h3>
+
+        <div id="reward"></div>
+    </div>
+</div>
+
+<script>
+
+function showScreen(id){
+    document.querySelectorAll(".screen")
+    .forEach(s=>s.classList.remove("active"));
+
+    document.getElementById(id)
+    .classList.add("active");
+}
+
+/* QUEST 1 */
+
+function smileQuest(){
+    const msgs = [
+        "You're prettier than you think ❤️",
+        "Someone is lucky to have you 💖",
+        "You deserve a smile today 🌸",
+        "You make life brighter ✨"
+    ];
+
+    document.getElementById("smileMsg").innerText =
+        msgs[Math.floor(Math.random()*msgs.length)];
+
+    setTimeout(()=>{
+        showScreen("quest2");
+    },2500);
+}
+
+/* QUEST 2 */
+
+let score = 0;
+
+function startHeartGame(){
+
+    score = 0;
+
+    const area = document.getElementById("heartGame");
+    area.innerHTML="";
+
+    const timer = setInterval(()=>{
+        const h = document.createElement("div");
+        h.className="heart";
+        h.innerHTML="❤️";
+
+        h.style.left=Math.random()*90+"%";
+        h.style.top=Math.random()*80+"%";
+
+        h.onclick=()=>{
+            score++;
+            document.getElementById("score").innerText=score;
+            h.remove();
+        };
+
+        area.appendChild(h);
+
+        setTimeout(()=>{
+            h.remove();
+        },1200);
+
+    },400);
+
+    setTimeout(()=>{
+        clearInterval(timer);
+        showScreen("quest3");
+    },15000);
+}
+
+/* QUEST 3 */
+
+function openBox(){
+
+    const prizes=[
+        "1000 virtual hugs 🤗",
+        "Secret compliment unlocked ❤️",
+        "Lucky Princess Crown 👑"
+    ];
+
+    document.getElementById("boxResult").innerText=
+    prizes[Math.floor(Math.random()*prizes.length)];
+
+    setTimeout(()=>{
+        showScreen("quest4");
+    },2500);
+}
+
+/* QUEST 4 */
+
+function memoryQuest(){
+
+    document.getElementById("memoryMsg")
+    .innerText=
+    "That's one of my favourites too ❤️";
+
+    setTimeout(()=>{
+        showScreen("quest5");
+    },2500);
+}
+
+/* QUEST 5 */
+
+let sadnessHits=0;
+
+const sadness=document.getElementById("sadness");
+
+sadness.addEventListener("click",()=>{
+
+    sadnessHits++;
+
+    document.getElementById("sadnessMsg")
+    .innerText=
+    "Critical damage! ("+sadnessHits+"/5)";
+
+    sadness.style.left=
+    Math.random()*250+"px";
+
+    sadness.style.top=
+    Math.random()*200+"px";
+
+    if(sadnessHits>=5){
+        document.getElementById("sadnessMsg")
+        .innerText="Sadness defeated!";
+
+        setTimeout(()=>{
+            showScreen("final");
+        },1500);
+    }
+});
+
+/* FINAL HEART */
+
+let love=0;
+
+document.getElementById("bigHeart")
+.addEventListener("click",()=>{
+
+    love++;
+
+    document.getElementById("loveCount")
+    .innerText=love+" / 50";
+
+    document.getElementById("bigHeart")
+    .style.transform=
+    "scale("+(1+love/40)+")";
+
+    if(love>=50){
+
+        document.getElementById("reward").innerHTML=
+        `
+        <h2>🎉 Mission Complete 🎉</h2>
+        <p>
+        ✓ Cute<br>
+        ✓ Strong<br>
+        ✓ Loved<br>
+        ✓ Amazing
+        </p>
+
+        <h3>
+        No matter what kind of day you're having,
+        I'm always rooting for you ❤️
+        </h3>
+        `;
+    }
+});
+
+/* SECRET EASTER EGG */
+
+let titleClicks=0;
+
+document.querySelector("h1")?.addEventListener("click",()=>{
+
+    titleClicks++;
+
+    if(titleClicks===10){
+        alert("❤️ Secret Message: You're my favourite person.");
+    }
+});
+
+</script>
+
+</body>
+</html>
